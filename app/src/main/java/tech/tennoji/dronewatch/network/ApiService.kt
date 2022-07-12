@@ -7,6 +7,8 @@ import kotlinx.coroutines.Deferred
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Query
 
 
 const val BASE_URL = "http://10.0.2.2:8080"
@@ -23,8 +25,31 @@ private val retrofit = Retrofit.Builder()
 
 
 interface ApiService {
-    @GET("/testGetImage")
-    fun getLatestImageAsync(): Deferred<WebMessage<DroneRecord>>
+
+    @POST("/subscribe")
+    fun subscribeToTopicAsync(
+        @Query("token") token: String,
+        @Query("area") area: String
+    ): Deferred<WebMessage<Int>>
+
+    @POST("/unsubscribe")
+    fun unsubscribeToTopicAsync(
+        @Query("token") token: String,
+        @Query("area") area: String
+    ): Deferred<WebMessage<Int>>
+
+    @GET("/getLatestRecord")
+    fun getLatestDroneRecordAsync(@Query("droneId") droneId: String): Deferred<WebMessage<DroneRecord>>
+
+    @GET("/getSubscribedAreas")
+    fun getSubscribedAreasAsync(@Query("token") token: String): Deferred<List<String>>
+
+    @GET("/getNotSubscribedAreas")
+    fun getNotSubscribedAreasAsync(@Query("token") token: String): Deferred<List<String>>
+
+    @GET("/getSubscribedAreaStatus")
+    fun getSubscribedAreaStatusAsync(@Query("token") token: String): Deferred<List<FenceStatus>>
+
 }
 
 object Api {

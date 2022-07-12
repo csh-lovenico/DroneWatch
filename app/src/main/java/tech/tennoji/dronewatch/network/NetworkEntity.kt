@@ -21,8 +21,15 @@ data class DroneRecord(
     val location: GeoJsonPoint
 )
 
+@JsonClass(generateAdapter = true)
 data class DroneMetaData(
     val droneId: String
+)
+
+@JsonClass(generateAdapter = true)
+data class FenceStatus(
+    val name: String,
+    val number: Long
 )
 
 // Custom adapter for converting LocalDateTime object
