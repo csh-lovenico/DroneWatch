@@ -6,10 +6,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Deferred
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.http.Field
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 
 const val BASE_URL = "http://10.0.2.2:8080"
@@ -27,12 +24,14 @@ private val retrofit = Retrofit.Builder()
 
 interface ApiService {
 
+    @FormUrlEncoded
     @POST("/subscribe")
     fun subscribeToTopicAsync(
         @Field("token") token: String,
         @Field("area") area: String
     ): Deferred<WebMessage<Int>>
 
+    @FormUrlEncoded
     @POST("/unsubscribe")
     fun unsubscribeToTopicAsync(
         @Field("token") token: String,
@@ -42,13 +41,16 @@ interface ApiService {
     @GET("/getLatestRecord")
     fun getLatestDroneRecordAsync(@Query("droneId") droneId: String): Deferred<WebMessage<DroneRecord>>
 
-    @GET("/getSubscribedAreas")
+    @FormUrlEncoded
+    @POST("/getSubscribedAreas")
     fun getSubscribedAreasAsync(@Field("token") token: String): Deferred<WebMessage<List<String>>>
 
-    @GET("/getNotSubscribedAreas")
+    @FormUrlEncoded
+    @POST("/getNotSubscribedAreas")
     fun getNotSubscribedAreasAsync(@Field("token") token: String): Deferred<WebMessage<List<String>>>
 
-    @GET("/getSubscribedAreaStatus")
+    @FormUrlEncoded
+    @POST("/getSubscribedAreaStatus")
     fun getSubscribedAreaStatusAsync(@Field("token") token: String): Deferred<WebMessage<List<FenceStatus>>>
 
 }
