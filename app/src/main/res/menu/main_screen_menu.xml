@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/main_list_refresh"
+        android:icon="@android:drawable/stat_notify_sync"
+        android:title="@string/main_list_refresh_text"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/main_subscription_manage"
+        android:title="@string/main_manage_subscription_text" />
+</menu>
