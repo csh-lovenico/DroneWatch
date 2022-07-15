@@ -18,7 +18,8 @@ data class DroneRecord(
     val id: String,
     val timestamp: LocalDateTime,
     val metadata: DroneMetaData,
-    val location: GeoJsonPoint
+    val location: GeoJsonPoint,
+    val imagePath: String
 )
 
 @JsonClass(generateAdapter = true)
