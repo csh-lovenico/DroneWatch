@@ -2,10 +2,13 @@ package tech.tennoji.dronewatch.subscription
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.Log
+import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import tech.tennoji.dronewatch.R
 
 class SubscriptionFragment : Fragment() {
@@ -23,8 +26,60 @@ class SubscriptionFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_subscription, container, false)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        viewModel = ViewModelProvider(this)[SubscriptionViewModel::class.java]
+        val token = arguments?.getString("token")
+        if (token != null) {
+            viewModel.setToken(token)
+        }
+        super.onCreate(savedInstanceState)
+
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this)[SubscriptionViewModel::class.java]
+        (requireActivity() as AppCompatActivity).supportActionBar?.title =
+            context?.getString(R.string.main_manage_subscription_text)
+        val menuHost: MenuHost = requireActivity()
+        val swipeRefreshLayout =
+            view.findViewById<SwipeRefreshLayout>(R.id.subscription_manage_swipe)
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.subscription_manage_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.subscription_menu_add -> {
+                        Log.i(this.javaClass.toString(), "Add subscription")
+                        true
+                    }
+                    else -> false
+                }
+            }
+
+        }, viewLifecycleOwner)
+
+        viewModel.token.observe(viewLifecycleOwner) {
+            it?.let {
+                viewModel.refreshList()
+            }
+        }
+
+        viewModel.areaList.observe(viewLifecycleOwner) {
+            it?.let {
+                Log.i(this.javaClass.toString(), it.toString())
+            }
+        }
+
+        viewModel.loading.observe(viewLifecycleOwner) {
+            it?.let {
+                swipeRefreshLayout.isRefreshing = it
+            }
+        }
+
+        swipeRefreshLayout.setOnRefreshListener {
+            viewModel.refreshList()
+        }
     }
 }
