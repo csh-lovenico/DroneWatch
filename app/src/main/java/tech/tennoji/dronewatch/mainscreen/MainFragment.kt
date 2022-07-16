@@ -51,7 +51,11 @@ class MainFragment : Fragment() {
                 adapter.submitList(it)
             }
         }
-
+        viewModel.token.observe(viewLifecycleOwner) {
+            it?.let {
+                viewModel.fetchStatus()
+            }
+        }
         viewModel.loading.observe(viewLifecycleOwner) {
             it?.let {
                 swipeRefreshLayout.isRefreshing = it

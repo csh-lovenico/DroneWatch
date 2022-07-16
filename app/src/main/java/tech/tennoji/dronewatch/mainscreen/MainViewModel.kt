@@ -66,7 +66,6 @@ class MainViewModel : ViewModel() {
             Log.i(this.javaClass.name, returnToken)
 
             _token.value = returnToken
-            fetchStatus()
         })
     }
 }
