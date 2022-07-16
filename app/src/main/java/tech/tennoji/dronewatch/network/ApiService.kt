@@ -53,6 +53,9 @@ interface ApiService {
     @POST("/getSubscribedAreaStatus")
     fun getSubscribedAreaStatusAsync(@Field("token") token: String): Deferred<WebMessage<List<FenceStatus>>>
 
+    @GET("/getAreaDroneList")
+    fun getAreaDroneListAsync(@Query("area") area: String): Deferred<WebMessage<List<String>>>
+
 }
 
 object Api {
