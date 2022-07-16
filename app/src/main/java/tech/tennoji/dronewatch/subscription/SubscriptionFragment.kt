@@ -5,9 +5,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import tech.tennoji.dronewatch.R
 
@@ -43,6 +46,9 @@ class SubscriptionFragment : Fragment() {
         val menuHost: MenuHost = requireActivity()
         val swipeRefreshLayout =
             view.findViewById<SwipeRefreshLayout>(R.id.subscription_manage_swipe)
+        val adapter = SubscriptionItemAdapter(SubscriptionItemListener { })
+        val recyclerView = view.findViewById<RecyclerView>(R.id.subscription_manage_list)
+        recyclerView.adapter = adapter
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.subscription_manage_menu, menu)
@@ -52,6 +58,15 @@ class SubscriptionFragment : Fragment() {
                 return when (menuItem.itemId) {
                     R.id.subscription_menu_add -> {
                         Log.i(this.javaClass.toString(), "Add subscription")
+                        val bundle = bundleOf("token" to viewModel.token.value)
+                        findNavController().navigate(
+                            R.id.action_subscriptionFragment_to_addSubscriptionFragment,
+                            bundle
+                        )
+                        true
+                    }
+                    R.id.subscription_menu_refresh -> {
+                        viewModel.refreshList()
                         true
                     }
                     else -> false
@@ -68,7 +83,7 @@ class SubscriptionFragment : Fragment() {
 
         viewModel.areaList.observe(viewLifecycleOwner) {
             it?.let {
-                Log.i(this.javaClass.toString(), it.toString())
+                adapter.submitList(it)
             }
         }
 
