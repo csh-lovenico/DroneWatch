@@ -46,7 +46,8 @@ class SubscriptionFragment : Fragment() {
         val menuHost: MenuHost = requireActivity()
         val swipeRefreshLayout =
             view.findViewById<SwipeRefreshLayout>(R.id.subscription_manage_swipe)
-        val adapter = SubscriptionItemAdapter(SubscriptionItemListener { })
+        val adapter =
+            SubscriptionItemAdapter(SubscriptionItemListener { area -> viewModel.navigate(area) })
         val recyclerView = view.findViewById<RecyclerView>(R.id.subscription_manage_list)
         recyclerView.adapter = adapter
         menuHost.addMenuProvider(object : MenuProvider {
@@ -57,7 +58,6 @@ class SubscriptionFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.subscription_menu_add -> {
-                        Log.i(this.javaClass.toString(), "Add subscription")
                         val bundle = bundleOf("token" to viewModel.token.value)
                         findNavController().navigate(
                             R.id.action_subscriptionFragment_to_addSubscriptionFragment,
@@ -74,6 +74,20 @@ class SubscriptionFragment : Fragment() {
             }
 
         }, viewLifecycleOwner)
+
+        viewModel.areaName.observe(viewLifecycleOwner) {
+            it?.let {
+                val bundle = Bundle()
+                bundle.putBoolean("isAdd", false)
+                bundle.putString("areaName", it)
+                bundle.putString("token", viewModel.token.value)
+                findNavController().navigate(
+                    R.id.action_subscriptionFragment_to_areaDetailFragment,
+                    bundle
+                )
+                viewModel.navigateComplete()
+            }
+        }
 
         viewModel.token.observe(viewLifecycleOwner) {
             it?.let {

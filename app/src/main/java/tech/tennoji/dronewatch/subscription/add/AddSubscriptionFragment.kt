@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import tech.tennoji.dronewatch.R
@@ -47,7 +48,8 @@ class AddSubscriptionFragment : Fragment() {
         val swipeRefreshLayout =
             view.findViewById<SwipeRefreshLayout>(R.id.add_subscription_swipe)
         val recyclerView = view.findViewById<RecyclerView>(R.id.add_subscription_list)
-        val adapter = SubscriptionItemAdapter(SubscriptionItemListener { })
+        val adapter =
+            SubscriptionItemAdapter(SubscriptionItemListener { area -> viewModel.navigate(area) })
         recyclerView.adapter = adapter
 
         menuHost.addMenuProvider(object : MenuProvider {
@@ -82,6 +84,20 @@ class AddSubscriptionFragment : Fragment() {
         viewModel.loading.observe(viewLifecycleOwner) {
             it?.let {
                 swipeRefreshLayout.isRefreshing = it
+            }
+        }
+
+        viewModel.areaName.observe(viewLifecycleOwner) {
+            it?.let {
+                val bundle = Bundle()
+                bundle.putBoolean("isAdd", true)
+                bundle.putString("areaName", it)
+                bundle.putString("token", viewModel.token.value)
+                findNavController().navigate(
+                    R.id.action_addSubscriptionFragment_to_areaDetailFragment,
+                    bundle
+                )
+                viewModel.navigateComplete()
             }
         }
 

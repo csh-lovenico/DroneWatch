@@ -27,6 +27,18 @@ class AddSubscriptionViewModel : ViewModel() {
         _token.value = token
     }
 
+    private val _areaName = MutableLiveData<String>()
+    val areaName: LiveData<String>
+        get() = _areaName
+
+    fun navigate(areaName: String) {
+        _areaName.value = areaName
+    }
+
+    fun navigateComplete() {
+        _areaName.value = null
+    }
+
     fun refreshList() {
         _loading.value = true
         coroutineScope.launch {
