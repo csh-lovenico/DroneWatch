@@ -13,13 +13,14 @@
         <action
             android:id="@+id/action_mainFragment_to_subscriptionFragment"
             app:destination="@id/subscriptionFragment" />
-        <argument
-            android:name="token"
-            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/subscriptionFragment"
         android:name="tech.tennoji.dronewatch.subscription.SubscriptionFragment"
         android:label="fragment_subscription"
-        tools:layout="@layout/fragment_subscription" />
+        tools:layout="@layout/fragment_subscription" >
+        <argument
+            android:name="token"
+            app:argType="string" />
+    </fragment>
 </navigation>
