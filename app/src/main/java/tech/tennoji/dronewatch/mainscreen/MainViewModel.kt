@@ -28,13 +28,21 @@ class MainViewModel : ViewModel() {
     val statusList: LiveData<List<FenceStatus>>
         get() = _statusList
 
+    private val _loading = MutableLiveData(false)
+    val loading: LiveData<Boolean>
+        get() = _loading
+
+
+
     fun fetchStatus() {
+        _loading.value = true
         coroutineScope.launch {
             val result =
                 token.value?.let { Api.retrofitService.getSubscribedAreaStatusAsync(it).await() }
             withContext(Dispatchers.Main) {
                 if (result != null) {
                     _statusList.value = result.data
+                    _loading.value = false
                 }
             }
         }
@@ -43,7 +51,11 @@ class MainViewModel : ViewModel() {
     private fun getToken() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
-                Log.w(this.javaClass.toString(), "Fetching FCM registration token failed", task.exception)
+                Log.w(
+                    this.javaClass.toString(),
+                    "Fetching FCM registration token failed",
+                    task.exception
+                )
                 _token.value = "error"
                 return@OnCompleteListener
             }
@@ -51,9 +63,10 @@ class MainViewModel : ViewModel() {
             // Get new FCM registration token
             val returnToken = task.result
 
-            Log.d(this.javaClass.name, returnToken)
+            Log.i(this.javaClass.name, returnToken)
 
             _token.value = returnToken
+            fetchStatus()
         })
     }
 }
