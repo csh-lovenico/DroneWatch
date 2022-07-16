@@ -3,6 +3,8 @@ package tech.tennoji.dronewatch.mainscreen
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -13,7 +15,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import tech.tennoji.dronewatch.R
-import tech.tennoji.dronewatch.network.FenceStatus
 
 class MainFragment : Fragment() {
 
@@ -37,12 +38,14 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (requireActivity() as AppCompatActivity).supportActionBar?.title =
+            context?.getString(R.string.app_name)
         val menuHost: MenuHost = requireActivity()
         val swipeRefreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.main_swipe_refresh)
         val statusList = view.findViewById<RecyclerView>(R.id.areaStatusList)
         val adapter = MainListAdapter(
             MainListItemListener { area -> Log.i(this.javaClass.toString(), area) })
-        statusList.adapter=adapter
+        statusList.adapter = adapter
         viewModel.statusList.observe(viewLifecycleOwner) {
             it?.let {
                 adapter.submitList(it)
@@ -67,7 +70,11 @@ class MainFragment : Fragment() {
                         true
                     }
                     R.id.main_subscription_manage -> {
-                        findNavController().navigate(R.id.action_mainFragment_to_subscriptionFragment)
+                        val bundle = bundleOf("token" to viewModel.token.value)
+                        findNavController().navigate(
+                            R.id.action_mainFragment_to_subscriptionFragment,
+                            bundle
+                        )
                         true
                     }
                     else -> false
