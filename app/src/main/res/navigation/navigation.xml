@@ -33,6 +33,9 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_subscriptionFragment_to_areaDetailFragment"
+            app:destination="@id/areaDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/addSubscriptionFragment"
@@ -42,5 +45,23 @@
         <argument
             android:name="token"
             app:argType="string" />
+        <action
+            android:id="@+id/action_addSubscriptionFragment_to_areaDetailFragment"
+            app:destination="@id/areaDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/areaDetailFragment"
+        android:name="tech.tennoji.dronewatch.areadetail.AreaDetailFragment"
+        android:label="fragment_area_detail"
+        tools:layout="@layout/fragment_area_detail" >
+        <argument
+            android:name="areaName"
+            app:argType="string" />
+        <argument
+            android:name="token"
+            app:argType="string" />
+        <argument
+            android:name="isAdd"
+            app:argType="boolean" />
     </fragment>
 </navigation>
