@@ -1,34 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="status"
+            type="tech.tennoji.dronewatch.network.FenceStatus" />
 
-    <TextView
-        android:id="@+id/areaName"
+        <variable
+            name="listener"
+            type="tech.tennoji.dronewatch.mainscreen.MainListItemListener" />
+    </data>
+
+    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="8dp"
-        android:text="TextView"
-        android:textAlignment="viewStart"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        tools:text="area_name" />
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground"
+        android:onClick="@{()->listener.onClick(status.name)}"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/areaDroneCount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:text="TextView"
-        android:textAlignment="viewStart"
-        tools:text="Drones in this area: 1" />
+        <TextView
+            android:id="@+id/areaName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="8dp"
+            android:text="@{status.name}"
+            android:textAlignment="viewStart"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:text="area_name" />
 
-    <View
-        android:id="@+id/areaStatusListDivider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginHorizontal="8dp"
-        android:background="?android:attr/listDivider" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/areaDroneCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:textAlignment="viewStart"
+            tools:text="Drones in this area: 1" />
+
+        <View
+            android:id="@+id/areaStatusListDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="8dp"
+            android:background="?android:attr/listDivider" />
+    </LinearLayout>
+</layout>
