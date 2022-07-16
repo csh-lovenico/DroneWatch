@@ -8,8 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import tech.tennoji.dronewatch.databinding.StatusListItemBinding
 import tech.tennoji.dronewatch.network.FenceStatus
 
-class MainScreenAdapter {
-}
 
 class MainListItemListener(val listener: (area: String) -> Unit) {
     fun onClick(area: String) {
