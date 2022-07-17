@@ -95,11 +95,7 @@ class MainFragment : Fragment() {
         }, viewLifecycleOwner)
 
 
-        viewLifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
-            override fun onPause(owner: LifecycleOwner) {
-                super.onPause(owner)
-            }
-        })
+
 
         swipeRefreshLayout.setOnRefreshListener {
             viewModel.fetchStatus()
