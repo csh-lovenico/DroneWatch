@@ -32,6 +32,9 @@ class MainViewModel : ViewModel() {
     val loading: LiveData<Boolean>
         get() = _loading
 
+    private val _areaName = MutableLiveData<String>()
+    val areaName: LiveData<String>
+        get() = _areaName
 
 
     fun fetchStatus() {
@@ -46,6 +49,14 @@ class MainViewModel : ViewModel() {
                 }
             }
         }
+    }
+
+    fun navigate(areaName: String) {
+        _areaName.value = areaName
+    }
+
+    fun navigateComplete() {
+        _areaName.value = null
     }
 
     private fun getToken() {

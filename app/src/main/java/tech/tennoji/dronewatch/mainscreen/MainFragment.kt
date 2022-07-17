@@ -44,7 +44,7 @@ class MainFragment : Fragment() {
         val swipeRefreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.main_swipe_refresh)
         val statusList = view.findViewById<RecyclerView>(R.id.areaStatusList)
         val adapter = MainListAdapter(
-            MainListItemListener { area -> Log.i(this.javaClass.toString(), area) })
+            MainListItemListener { area -> viewModel.navigate(area) })
         statusList.adapter = adapter
         viewModel.statusList.observe(viewLifecycleOwner) {
             it?.let {
@@ -59,6 +59,14 @@ class MainFragment : Fragment() {
         viewModel.loading.observe(viewLifecycleOwner) {
             it?.let {
                 swipeRefreshLayout.isRefreshing = it
+            }
+        }
+
+        viewModel.areaName.observe(viewLifecycleOwner) {
+            it?.let {
+                val bundle = bundleOf("areaName" to it)
+                findNavController().navigate(R.id.action_mainFragment_to_areaDroneFragment, bundle)
+                viewModel.navigateComplete()
             }
         }
 
