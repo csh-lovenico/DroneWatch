@@ -17,6 +17,9 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_mainFragment_to_areaDroneFragment"
+            app:destination="@id/areaDroneFragment" />
     </fragment>
     <fragment
         android:id="@+id/subscriptionFragment"
@@ -63,5 +66,26 @@
         <argument
             android:name="isAdd"
             app:argType="boolean" />
+    </fragment>
+    <fragment
+        android:id="@+id/areaDroneFragment"
+        android:name="tech.tennoji.dronewatch.areadrone.AreaDroneFragment"
+        android:label="fragment_area_drone"
+        tools:layout="@layout/fragment_area_drone" >
+        <argument
+            android:name="areaName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_areaDroneFragment_to_droneImageFragment"
+            app:destination="@id/droneImageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/droneImageFragment"
+        android:name="tech.tennoji.dronewatch.droneimage.DroneImageFragment"
+        android:label="fragment_drone_image"
+        tools:layout="@layout/fragment_drone_image" >
+        <argument
+            android:name="droneId"
+            app:argType="string" />
     </fragment>
 </navigation>
