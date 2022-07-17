@@ -26,11 +26,11 @@ class MainListViewHolder(private val binding: StatusListItemBinding) :
 
 class MainListDataDiffCallback : DiffUtil.ItemCallback<FenceStatus>() {
     override fun areItemsTheSame(oldItem: FenceStatus, newItem: FenceStatus): Boolean {
-        return oldItem.name == newItem.name
+        return oldItem.name == newItem.name && oldItem.number == newItem.number
     }
 
     override fun areContentsTheSame(oldItem: FenceStatus, newItem: FenceStatus): Boolean {
-        return oldItem.name == newItem.name
+        return oldItem.name == newItem.name && oldItem.number == newItem.number
     }
 
 }
