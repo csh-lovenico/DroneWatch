@@ -87,5 +87,8 @@
         <argument
             android:name="droneId"
             app:argType="string" />
+        <argument
+            android:name="area"
+            app:argType="string" />
     </fragment>
 </navigation>

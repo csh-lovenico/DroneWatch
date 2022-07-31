@@ -1,5 +1,6 @@
 package tech.tennoji.dronewatch.droneimage
 
+import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,10 +9,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import coil.load
 import tech.tennoji.dronewatch.R
 import tech.tennoji.dronewatch.network.BASE_URL
@@ -37,22 +41,24 @@ class DroneImageFragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[DroneImageViewModel::class.java]
         val droneId = arguments?.getString("droneId")
-        if (droneId != null) {
-            viewModel.setDroneId(droneId)
+        val area = arguments?.getString("area")
+        if (droneId != null && area != null) {
+            viewModel.setDroneId(droneId, area)
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.droneId.observe(viewLifecycleOwner) {
+        viewModel.isReady.observe(viewLifecycleOwner) {
             it?.let {
-                viewModel.launch()
+                if (it) {
+                    viewModel.launch()
+                }
             }
         }
 
         view.findViewById<Button>(R.id.pause_button).setOnClickListener {
-            Log.i("Coroutine Test", "Stop button")
             viewModel.end()
         }
 
@@ -85,6 +91,14 @@ class DroneImageFragment : Fragment() {
             }
         }
 
+        viewModel.showErrDialog.observe(viewLifecycleOwner) {
+            it?.let {
+                if (it) {
+                    NoUpdateDialog().show(parentFragmentManager, "noUpdateDialog")
+                }
+            }
+        }
+
         viewLifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onPause(owner: LifecycleOwner) {
                 super.onPause(owner)
@@ -96,5 +110,18 @@ class DroneImageFragment : Fragment() {
                 viewModel.end()
             }
         })
+    }
+
+    class NoUpdateDialog : DialogFragment() {
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            return activity?.let {
+                val builder = AlertDialog.Builder(it)
+                builder.setMessage("No image updates.\nThe drone has left this area.")
+                    .setPositiveButton("OK") { _, _ ->
+                        findNavController().popBackStack()
+                    }
+                builder.create()
+            } ?: throw IllegalStateException("Activity cannot be null")
+        }
     }
 }

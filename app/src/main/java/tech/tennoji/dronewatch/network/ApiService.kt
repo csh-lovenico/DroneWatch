@@ -39,7 +39,10 @@ interface ApiService {
     ): Deferred<WebMessage<Int>>
 
     @GET("/getLatestRecord")
-    fun getLatestDroneRecordAsync(@Query("droneId") droneId: String): Deferred<WebMessage<DroneRecord>>
+    fun getLatestDroneRecordAsync(
+        @Query("droneId") droneId: String,
+        @Query("area") area: String
+    ): Deferred<WebMessage<DroneRecord>>
 
     @FormUrlEncoded
     @POST("/getSubscribedAreas")

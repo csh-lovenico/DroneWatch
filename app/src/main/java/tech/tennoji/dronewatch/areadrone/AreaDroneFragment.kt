@@ -72,7 +72,7 @@ class AreaDroneFragment : Fragment() {
 
         viewModel.droneId.observe(viewLifecycleOwner) {
             it?.let {
-                val bundle = bundleOf("droneId" to it)
+                val bundle = bundleOf("droneId" to it, "area" to viewModel.areaName.value)
                 findNavController().navigate(
                     R.id.action_areaDroneFragment_to_droneImageFragment,
                     bundle
